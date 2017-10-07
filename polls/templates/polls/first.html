@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- jQuery !-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <!-- jQuery UI !-->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+</head>
+<body>
+
+{% if not user_vote %}
+    <form id="vote" action="" method="post">
+        {% csrf_token %}
+        {{ form.time.label_tag }}
+        {{ form.time }}
+        <br><br>
+        <div class="ui-widget">
+            <label for="id_event">Мероприятие:</label>
+            <input id="id_event" name="event">
+        </div>
+        <br><br>
+        <button type="submit">Голосовать</button>
+    </form>
+{% else %}
+    Вы проголосовали
+{% endif %}
+
+<br><br>
+<div>Первая фаза завершится через <span id="time">*</span> минут</div>
+
+<input id="vot" type="hidden" name="vot" value="{{ phase.votes }}">
+<input id="delta" type="hidden" name="delta" value="{{ delta }}">
+<br><br>
+<div>Всего проголосовало: <span id="votes"></span> человек</div>
+
+<br><br>
+{% if phase.user == request.user %}
+    <a href="{% url 'reset' %}">Начать голосование заново</a>
+
+{% endif %}
+
+<script type="text/javascript" src="{% static "js/first.js" %}"></script>
+<script type="text/javascript" src="{% static "js/timer.js" %}"></script>
+
+</body>
+</html>
