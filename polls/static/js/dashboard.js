@@ -186,7 +186,7 @@ $(document).ready(function () {
                 color: colors[18],
                 drilldown: {
                     name: 'Opera versions',
-                    categories: values[8],
+                    categories: values[18],
                     data: ValLength(values[18]),
                     color: colors[8]
                 }
@@ -195,7 +195,7 @@ $(document).ready(function () {
                 color: colors[19],
                 drilldown: {
                     name: 'Proprietary or Undetectable',
-                    categories: values[9],
+                    categories: values[19],
                     data: ValLength(values[19]),
                     color: colors[9]
                 }
