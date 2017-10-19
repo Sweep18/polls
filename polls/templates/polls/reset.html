@@ -11,14 +11,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 </head>
 <body>
-<h3>Старт голосования</h3>
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Старт</button>
-</form>
 
-<script type="text/javascript" src="{% static "js/main.js" %}"></script>
+<h3>Голосование остановлено</h3>
+<br>
+
+<a href="{% url 'main' %}">Начать заново</a>
+
+<script type="text/javascript" src="{% static "js/reset.js" %}"></script>
 
 </body>
 </html>

@@ -1,13 +1,11 @@
 from django import forms
-from django.utils import timezone
 
 from .models import TimePhase, FirstPhase
 
 
 def time_choice():
     time_list = []
-    now = timezone.localtime(timezone.now())
-    for hour in range(now.hour, 24):
+    for hour in range(0, 24):
         time_list.append((hour, hour))
     choices = tuple(time_list)
     return choices

@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from polls import views
+from polls.utils import get_event
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -24,5 +25,5 @@ urlpatterns = [
     url(r'^register/$', views.RegisterView.as_view(), name='register'),
     url(r'^register/$', views.RegisterView.as_view(), name='register'),
     url(r'^polls/', include('polls.urls')),
-    url(r'^get_event/', views.get_event, name='get_event'),
+    url(r'^get_event/', get_event, name='get_event'),
 ]

@@ -1,5 +1,17 @@
 $(document).ready(function () {
 
+    var now = new Date();
+    var hour = now.getHours();
+
+    for (var i=0; i<24; i++) {
+        if (i == hour) {
+            $("#id_time").val(i);
+        }
+        else if (i < hour) {
+        $("#id_time option[value='" + i + "']").hide();
+        }
+    }
+
     $(function () {
         $("#id_event").autocomplete({
             source: "/get_event/",
@@ -14,14 +26,24 @@ $(document).ready(function () {
         var selectedObj = ui.item;
     }
 
-    socket = new WebSocket("ws://" + window.location.host + "/vote/");
+    var socket = new WebSocket("ws://" + window.location.host + "/vote/");
     socket.onmessage = function (e) {
-        $("#votes").text(e.data)
+
+        if (e.data == 'reset') {
+            window.location.replace(location.href.replace('/polls/first/', '/polls/reset/'));
+        }
+
+        $("#votes").text(e.data);
+
     };
     socket.onopen = function () {
+
         socket.send($("#vot").val());
     };
     // Call onopen directly if socket is already open
     if (socket.readyState == WebSocket.OPEN) socket.onopen();
+
+    var socketStart = new WebSocket("ws://" + window.location.host + "/start/");
+    if (socketStart.readyState == WebSocket.OPEN) socketStart.onopen();
 
 });

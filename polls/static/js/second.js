@@ -1,7 +1,13 @@
 $(document).ready(function () {
 
-    socket = new WebSocket("ws://" + window.location.host + "/user/");
+    var socket = new WebSocket("ws://" + window.location.host + "/vote/");
     socket.onmessage = function (e) {
+
+        if (e.data == 'reset') {
+
+            window.location.replace(location.href.replace('/polls/second/', '/polls/reset/'));
+        }
+
         $("#user").text(e.data)
     };
     socket.onopen = function () {
@@ -20,7 +26,7 @@ $(document).ready(function () {
             seconds = seconds < 10 ? "0" + seconds : seconds;
             display.textContent = minutes + ":" + seconds;
             if (--timer < 0) {
-                window.location.replace(location.href.replace('/first/', '/second/'));
+                window.location.reload();
             }
         }, 1000);
     }

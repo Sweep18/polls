@@ -128,3 +128,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/'
+
+
+try:
+    from event.local_settings import *
+except ImportError:
+    pass
