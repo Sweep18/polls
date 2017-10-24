@@ -54,7 +54,7 @@ class MainPageView(LoginRequiredMixin, FormView):
             if delta >= 0:
                 return HttpResponseRedirect(reverse_lazy('first'))
             else:
-                return HttpResponseRedirect(reverse_lazy('second'))
+                return HttpResponseRedirect(reverse_lazy('second', kwargs={'pk': polls.id}))
         return super(MainPageView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -100,11 +100,16 @@ class FirstPhaseView(LoginRequiredMixin, FormView):
 class SecondPhaseView(LoginRequiredMixin, FormView):
     form_class = FirstPhaseForm
     template_name = 'polls/second.html'
-    success_url = reverse_lazy('second')
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('second', kwargs={'pk': self.kwargs['pk']})
 
     def get_context_data(self, **kwargs):
         context = super(SecondPhaseView, self).get_context_data(**kwargs)
-        phase = TimePhase.objects.all().last()
+        try:
+            phase = TimePhase.objects.get(id=self.kwargs['pk'])
+        except TimePhase.DoesNotExist:
+            return context
 
         # Если нет голосов, то отмена голосования
         if phase.votes == 0:
@@ -119,12 +124,13 @@ class SecondPhaseView(LoginRequiredMixin, FormView):
         context['win_time'], context['win_event'], context['win_user'] = get_win_list(phase)
 
         # Проверка завершения голосования
-        if delta < 0 or not context['win_time']:
-            reset_polls(phase)
+        if phase.active:
+            if delta < 0 or not context['win_time']:
+                reset_polls(phase)
 
         context['phase'] = phase
         context['delta'] = delta
-        context['dashboard'] = json.dumps(get_data_dashboard())  # Получаем данные для графика
+        context['dashboard'] = json.dumps(get_data_dashboard(phase))  # Получаем данные для графика
         return context
 
     def form_valid(self, form):
@@ -148,7 +154,19 @@ class ResetPollView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ResetPollView, self).get_context_data(**kwargs)
-        polls = TimePhase.objects.all().last()
-        if polls.user == self.request.user and polls.active:
-            reset_polls(polls)
+
+        try:
+            polls = TimePhase.objects.get(id=kwargs['pk'])
+        except TimePhase.DoesNotExist:
+            return context
+
+        context['active'] = polls.active
+        context['poll_id'] = kwargs['pk']
+
+        if polls.user == self.request.user:
+            context['user'] = True
+
+            if polls.active:
+                reset_polls(polls)
+
         return context

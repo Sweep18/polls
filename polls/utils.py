@@ -45,9 +45,8 @@ def reset_polls(phase):
 
 
 # Получаем данные для графика
-def get_data_dashboard():
+def get_data_dashboard(phases):
     time = {}
-    phases = TimePhase.objects.last()
     for i in range(0, 24):
         phase = FirstPhase.objects.filter(polls=phases, time=i)
         phase_event = phase.values_list('event', flat=True)

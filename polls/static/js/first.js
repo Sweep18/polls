@@ -3,12 +3,12 @@ $(document).ready(function () {
     var now = new Date();
     var hour = now.getHours();
 
-    for (var i=0; i<24; i++) {
+    for (var i = 0; i < 24; i++) {
         if (i == hour) {
             $("#id_time").val(i);
         }
         else if (i < hour) {
-        $("#id_time option[value='" + i + "']").hide();
+            $("#id_time option[value='" + i + "']").hide();
         }
     }
 
@@ -29,8 +29,8 @@ $(document).ready(function () {
     var socket = new WebSocket("ws://" + window.location.host + "/vote/");
     socket.onmessage = function (e) {
 
-        if (e.data == 'reset') {
-            window.location.replace(location.href.replace('/polls/first/', '/polls/reset/'));
+        if (e.data.substring(0, 5) == 'reset') {
+            window.location.replace(location.href.replace('/polls/first/', '/polls/reset/' + e.data.substring(5)));
         }
 
         $("#votes").text(e.data);

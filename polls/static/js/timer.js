@@ -9,7 +9,7 @@ $(document).ready(function () {
             seconds = seconds < 10 ? "0" + seconds : seconds;
             display.textContent = minutes + ":" + seconds;
             if (--timer < 0) {
-                window.location.replace(location.href.replace('/first/', '/second/'));
+                window.location.replace(location.href.replace('/first/', '/second/' + $("#poll_id").val()));
             }
         }, 1000);
     }

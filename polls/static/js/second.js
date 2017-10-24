@@ -3,9 +3,8 @@ $(document).ready(function () {
     var socket = new WebSocket("ws://" + window.location.host + "/vote/");
     socket.onmessage = function (e) {
 
-        if (e.data == 'reset') {
-
-            window.location.replace(location.href.replace('/polls/second/', '/polls/reset/'));
+        if (e.data.substring(0, 5) == 'reset') {
+            window.location.replace(location.href.replace('/polls/second/', '/polls/reset/' + e.data.substring(5)));
         }
 
         $("#user").text(e.data)

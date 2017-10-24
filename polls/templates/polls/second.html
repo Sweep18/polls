@@ -16,12 +16,14 @@
 
     <h3>Вторая фаза началась</h3>
     <div>Вторая фаза завершится через <span id="time">*</span> минут</div>
+
     <input id="delta" type="hidden" name="delta" value="{{ delta }}">
+
     <br><br>
 
     {% if phase.user == request.user %}
 
-        <a href="{% url 'reset' %}">Начать голосование заново</a>
+        <a href="{% url 'reset' phase.id %}">Начать голосование заново</a>
 
     {% endif %}
 
@@ -46,7 +48,7 @@
     Список участников мероприятия:
     <br><br>
     <input id="usr" type="hidden" name="usr" value="{{ win_user }}">
-    <span id="user"></span>
+    <span id="user">{% if not phase.active %}{{ win_user }}{% endif %}</span>
 
     {% if request.user.username not in win_user and delta > 0 %}
 
@@ -72,7 +74,10 @@
 <input id="dashboard" type="hidden" name="dashboard" value="{{ dashboard }}">
 <div style="max-width: 1660px;margin: auto;height: 1000px;" id="container"></div>
 
-<script type="text/javascript" src="{% static "js/second.js" %}"></script>
+{% if phase.active %}
+    <script type="text/javascript" src="{% static "js/second.js" %}"></script>
+{% endif %}
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script type="text/javascript" src="{% static "js/dashboard.js" %}"></script>

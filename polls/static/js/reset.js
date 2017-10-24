@@ -4,7 +4,10 @@ $(document).ready(function () {
 
     socket.onopen = function () {
 
-        socket.send('reset');
+        if ($("#active").val() == 'True' && $("#user").val() == 'True') {
+
+            socket.send('reset' + $("#poll_id").val());
+        }
     };
     // Call onopen directly if socket is already open
     if (socket.readyState == WebSocket.OPEN) socket.onopen();
