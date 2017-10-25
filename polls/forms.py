@@ -20,8 +20,15 @@ class TimePhaseForm(forms.ModelForm):
         fields = ['first', 'second']
 
 
+class EventTitle(forms.CharField):
+
+    def to_python(self, value):
+        return value.title()
+
+
 class FirstPhaseForm(forms.ModelForm):
     time = forms.ChoiceField(choices=time_choice, label='Время')
+    event = EventTitle()
 
     class Meta:
         model = FirstPhase

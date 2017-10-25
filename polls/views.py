@@ -130,7 +130,6 @@ class SecondPhaseView(LoginRequiredMixin, FormView):
 
         context['phase'] = phase
         context['delta'] = delta
-        context['dashboard'] = json.dumps(get_data_dashboard(phase))  # Получаем данные для графика
         return context
 
     def form_valid(self, form):

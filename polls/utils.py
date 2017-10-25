@@ -1,11 +1,12 @@
 import json
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.models import User
 
 from collections import Counter
 
-from .models import FirstPhase, TimePhase
+from .models import FirstPhase
 
 
 # Получаем список победителей
@@ -45,16 +46,27 @@ def reset_polls(phase):
 
 
 # Получаем данные для графика
-def get_data_dashboard(phases):
+@login_required()
+def get_data_dashboard(request):
+    phases = request.GET.get('phase')
     time = {}
     for i in range(0, 24):
+        event = {'len': 0}
         phase = FirstPhase.objects.filter(polls=phases, time=i)
         phase_event = phase.values_list('event', flat=True)
         if phase_event:
-            time[str(i)] = list(phase_event)
+            for x in phase_event:
+                u = phase.filter(event=x)
+                us = []
+                event['len'] += 1
+                users = list(u.values_list('user', flat=True))
+                for user in users:
+                    us.append(User.objects.get(id=user).username)
+                event[x] = us
+            time[str(i)] = event
         else:
             time[str(i)] = ['']
-    return time
+    return JsonResponse(time)
 
 
 # Получаем список вводившихся мероприятий
